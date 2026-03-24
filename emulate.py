@@ -5,21 +5,33 @@ import aux
 
 def print_board(board: HexBoard):
     """
-    Imprime el tablero en consola de forma legible.
+    Imprime el tablero en consola como un tablero hexagonal even-r.
     """
-    print(f"\n{'='*50}")
-    print(f"Estado del tablero")
-    print(f"{'='*50}")
+    print(f"\n{'='*70}")
+    print(f"Estado del tablero HEX (Even-R Layout)")
+    print(f"{'='*70}")
+    
+    # Leyenda de colores
+    print("Jugador 1 (Izquierda ↔ Derecha): 🔴")
+    print("Jugador 2 (Arriba ↕ Abajo): 🔵")
+    print("Vacío: ⚪\n")
     
     # Imprimir encabezado de columnas
-    print("   ", end="")
+    print("     ", end="")
     for col in range(board.size):
-        print(f"{col:2} ", end="")
+        print(f"{col:3}", end="")
     print()
     
-    # Imprimir filas
+    # Imprimir filas con indentación para layout hexagonal even-r
     for row in range(board.size):
-        print(f"{row:2} ", end="")
+        # En even-r invertido: filas pares tienen indentación, impares pegadas al borde
+        if row % 2 == 0:
+            indent = "  "  # 2 espacios para filas pares
+        else:
+            indent = ""
+        
+        print(f"{row:2} {indent}", end="")
+        
         for col in range(board.size):
             cell = board.board[row][col]
             if cell == 0:
@@ -29,7 +41,8 @@ def print_board(board: HexBoard):
             else:  # cell == 2
                 print(" 🔵 ", end="")
         print()
-    print(f"{'='*50}\n")
+    
+    print(f"{'='*70}\n")
 
 
 def get_player_type(player_num: int) -> str:

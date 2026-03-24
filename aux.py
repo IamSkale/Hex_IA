@@ -39,3 +39,15 @@ def board_to_string(board):
             row_symbols.append("." if value == 0 else str(value))
         lines.append(indent + " ".join(row_symbols))
     return "\n".join(lines)
+
+def _neighbors_internal(self, row: int, col: int):
+        """Genera los vecinos internos para check_connection."""
+        if row % 2 == 0:
+            directions = [(-1, 0), (-1, 1), (0, -1), (0, 1), (1, 0), (1, 1)]
+        else:
+            directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)]
+
+        for dr, dc in directions:
+            nr, nc = row + dr, col + dc
+            if 0 <= nr < self.size and 0 <= nc < self.size:
+                yield nr, nc
