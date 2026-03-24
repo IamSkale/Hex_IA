@@ -1,5 +1,5 @@
 """
-Board implementado para pruebas
+Board implementado para HEX
 """
 
 from __future__ import annotations
@@ -38,22 +38,6 @@ class HexBoard:
         self.board[row][col] = player_id
         return True
 
-    def get_legal_moves(self):
-        return [(r, c) for r in range(self.size) for c in range(self.size) if self.board[r][c] == 0]
-
-    def neighbors(self, row: int, col: int):
-        # even-r layout: filas pares desplazadas a la derecha (según convención standard)
-        # con esta configuración, los vecinos del hexágono son consistentes para el esquema top-bottom.
-        if row % 2 == 0:
-            directions = [(-1, 0), (-1, 1), (0, -1), (0, 1), (1, 0), (1, 1)]
-        else:
-            directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)]
-
-        for dr, dc in directions:
-            nr, nc = row + dr, col + dc
-            if 0 <= nr < self.size and 0 <= nc < self.size:
-                yield nr, nc
-
     def check_connection(self, player_id: int) -> bool:
         """
         Jugador 1 gana conectando izquierda-derecha.
@@ -75,7 +59,7 @@ class HexBoard:
                 r, c = queue.popleft()
                 if c == self.size - 1:
                     return True
-                for nr, nc in self.neighbors(r, c):
+                for nr, nc in self._neighbors_internal(r, c):
                     if (nr, nc) not in visited and self.board[nr][nc] == 1:
                         visited.add((nr, nc))
                         queue.append((nr, nc))
@@ -89,23 +73,21 @@ class HexBoard:
                 r, c = queue.popleft()
                 if r == self.size - 1:
                     return True
-                for nr, nc in self.neighbors(r, c):
+                for nr, nc in self._neighbors_internal(r, c):
                     if (nr, nc) not in visited and self.board[nr][nc] == 2:
                         visited.add((nr, nc))
                         queue.append((nr, nc))
 
         return False
 
-    def is_full(self) -> bool:
-        return all(cell != 0 for row in self.board for cell in row)
+    def _neighbors_internal(self, row: int, col: int):
+        """Genera los vecinos internos para check_connection."""
+        if row % 2 == 0:
+            directions = [(-1, 0), (-1, 1), (0, -1), (0, 1), (1, 0), (1, 1)]
+        else:
+            directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)]
 
-    def __str__(self) -> str:
-        lines = []
-        for r in range(self.size):
-            indent = " " * r
-            row_symbols = []
-            for c in range(self.size):
-                value = self.board[r][c]
-                row_symbols.append("." if value == 0 else str(value))
-            lines.append(indent + " ".join(row_symbols))
-        return "\n".join(lines)
+        for dr, dc in directions:
+            nr, nc = row + dr, col + dc
+            if 0 <= nr < self.size and 0 <= nc < self.size:
+                yield nr, nc

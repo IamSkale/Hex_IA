@@ -2,6 +2,7 @@ import random
 import heapq
 from player import Player
 from board import HexBoard
+from aux import get_legal_moves, neighbors, is_full
 
 
 class SmartPlayer(Player):
@@ -10,7 +11,7 @@ class SmartPlayer(Player):
         Usa Dijkstra con ponderación para encontrar el movimiento que minimiza la distancia
         para conectar los lados: propias=0, vacías=1, enemigas=infinito.
         """
-        legal_moves = board.get_legal_moves()
+        legal_moves = get_legal_moves(board)
         if not legal_moves:
             raise ValueError("No hay movimientos legales disponibles")
 
@@ -71,7 +72,7 @@ class SmartPlayer(Player):
             if (self.player_id == 1 and c == target_col) or (self.player_id == 2 and r == target_row):
                 return dist
 
-            for nr, nc in board.neighbors(r, c):
+            for nr, nc in neighbors(board, r, c):
                 if board.board[nr][nc] == opponent_id:
                     continue  # Enemigas: infinito, no transitar.
                 cost = 0 if board.board[nr][nc] == self.player_id else 1  # Propias: 0, vacías: 1

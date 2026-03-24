@@ -1,7 +1,7 @@
 from board import HexBoard
 from solution import SmartPlayer
 from player import Player
-
+import aux
 
 def print_board(board: HexBoard):
     """
@@ -102,7 +102,7 @@ def play_game(board_size: int = 4):
     
     while not game_over:
         # Verificar si el tablero está lleno
-        if board.is_full():
+        if aux.is_full(board):
             print("\n🤝 ¡El tablero está lleno! Empate.")
             game_over = True
             break
@@ -124,7 +124,7 @@ def play_game(board_size: int = 4):
             break
         
         # Verificar si el tablero está lleno después de Jugador 1
-        if board.is_full():
+        if aux.is_full(board):
             print("\n🤝 ¡El tablero está lleno! Empate.")
             game_over = True
             break
