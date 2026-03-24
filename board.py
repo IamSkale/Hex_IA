@@ -42,11 +42,12 @@ class HexBoard:
         return [(r, c) for r in range(self.size) for c in range(self.size) if self.board[r][c] == 0]
 
     def neighbors(self, row: int, col: int):
-        # even-r layout, tal como indica la orientación
+        # even-r layout: filas pares desplazadas a la derecha (según convención standard)
+        # con esta configuración, los vecinos del hexágono son consistentes para el esquema top-bottom.
         if row % 2 == 0:
-            directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)]
-        else:
             directions = [(-1, 0), (-1, 1), (0, -1), (0, 1), (1, 0), (1, 1)]
+        else:
+            directions = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)]
 
         for dr, dc in directions:
             nr, nc = row + dr, col + dc
